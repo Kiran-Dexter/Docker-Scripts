@@ -1,0 +1,12 @@
+[Unit]
+Description=Docker Reset and Cleanup Service
+After=network.target docker.service
+
+[Service]
+ExecStart=/usr/local/bin/your-script.sh
+Restart=on-failure
+TimeoutStartSec=0
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
