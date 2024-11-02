@@ -5,6 +5,16 @@ log() {
     echo "$(date +'%Y-%m-%d %H:%M:%S') - $1"
 }
 
+# Function to check if Docker is running
+check_docker_running() {
+    log "Checking if Docker is running..."
+    if ! systemctl is-active --quiet docker; then
+        log "Error: Docker is not running. Please start Docker before running this script."
+        exit 1
+    fi
+    log "Docker is running."
+}
+
 # Function to retrieve Docker root directory dynamically
 get_docker_root_dir() {
     log "Fetching Docker root directory..."
@@ -14,16 +24,6 @@ get_docker_root_dir() {
         exit 1
     fi
     log "Docker root directory: $docker_root_dir"
-}
-
-# Function to check if Docker is running
-check_docker_running() {
-    log "Checking if Docker is running..."
-    if ! systemctl is-active --quiet docker; then
-        log "Error: Docker is not running. Please start Docker before running this script."
-        exit 1
-    fi
-    log "Docker is running."
 }
 
 # Function to stop Docker-related services with a retry mechanism
@@ -115,6 +115,8 @@ cleanup_renamed_directories() {
 
 # Main script execution
 log "Non-Interactive Docker Directory Rename Script Starting..."
+
+# Ensure Docker is running before retrieving root directory or performing any operations
 check_docker_running
 
 # Stop Docker-related services
